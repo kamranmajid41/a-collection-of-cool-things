@@ -1,0 +1,42 @@
+# .github/workflows/deploy.yml
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches:
+      - main # Or 'master' if that's your default branch
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4 # Use v4 for better compatibility
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20' # Use a recent LTS Node.js version
+
+      - name: Install dependencies
+        run: npm install # Or 'yarn install' if you use Yarn
+
+      - name: Build project
+        run: npm run build # This runs your 'vite build' command
+
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v4 # Use v4 for better compatibility
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./dist # This is crucial: tell it to publish the 'dist' folder
+          cname: kamranmajid41.github.io # Set your custom domain if applicable, otherwise remove
+          # If your homepage in package.json is 'http://kamranmajid41.github.io/a-collection-of-cool-things',
+          # you will also need to set the base URL for your Vite app.
+          # For Vite, you should add 'base: "/a-collection-of-cool-things/"' to your vite.config.js
+          # If you don't have a vite.config.js, create one:
+          # export default defineConfig({
+          #   plugins: [react()],
+          #   base: "/a-collection-of-cool-things/",
+          # });
+
